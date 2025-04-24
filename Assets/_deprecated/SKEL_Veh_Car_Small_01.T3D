@@ -1,0 +1,9 @@
+Begin Object Class=/Script/Engine.Skeleton Name="SKEL_Veh_Car_Small_01" ExportPath="/Script/Engine.Skeleton'/Game/PolygonMilitary/Meshes/Vehicles/SKEL_Veh_Car_Small_01.SKEL_Veh_Car_Small_01'"
+   Begin Object Class=/Script/Engine.AnimCurveMetaData Name="AnimCurveMetaData_0" ExportPath="/Script/Engine.AnimCurveMetaData'/Game/PolygonMilitary/Meshes/Vehicles/SKEL_Veh_Car_Small_01.SKEL_Veh_Car_Small_01:AnimCurveMetaData_0'"
+   End Object
+   Begin Object Name="AnimCurveMetaData_0" ExportPath="/Script/Engine.AnimCurveMetaData'/Game/PolygonMilitary/Meshes/Vehicles/SKEL_Veh_Car_Small_01.SKEL_Veh_Car_Small_01:AnimCurveMetaData_0'"
+   End Object
+   BoneTree(6)=()
+   PreviewSkeletalMesh="/Game/PolygonMilitary/Meshes/Vehicles/SK_Veh_Car_Small_01.SK_Veh_Car_Small_01"
+   AssetUserData(0)="/Script/Engine.AnimCurveMetaData'AnimCurveMetaData_0'"
+End Object
