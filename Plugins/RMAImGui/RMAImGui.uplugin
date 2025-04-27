@@ -1,0 +1,26 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "2.5.0",
+	"FriendlyName": "RMA ImGui",
+	"Description": "[RMA ImGui] offers an integration of ImGui, ImPlot and ImSpinner libraries with a highly optimized and modular approach.",
+	"Category": "GUI",
+	"CreatedBy": "RMA",
+	"CreatedByURL": "https://www.unrealengine.com/marketplace/profile/RMA",
+	"DocsURL": "https://docs.google.com/document/d/1N5lO-SuShuVVUDhfVIWJgk9Jh5XBjC6UH8OVy_xjlgc/edit?usp=sharing",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/cf433d3a4993469fa3292b13fdc1a91f",
+	"SupportURL": "",
+	"EngineVersion": "5.5.0",
+	"CanContainContent": true,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "RMAImGui",
+			"Type": "Runtime",
+			"LoadingPhase": "PostEngineInit",
+			"PlatformAllowList": [
+				"Win64"
+			]
+		}
+	]
+}
