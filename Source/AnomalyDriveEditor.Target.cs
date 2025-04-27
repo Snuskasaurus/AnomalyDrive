@@ -13,7 +13,7 @@ public class AnomalyDriveEditorTarget : TargetRules
 
 		ExtraModuleNames.AddRange( new string[]
 		{
-			"AnomalyDrive"
+			"AnomalyDrive"  
 		} );
 	}
 }
