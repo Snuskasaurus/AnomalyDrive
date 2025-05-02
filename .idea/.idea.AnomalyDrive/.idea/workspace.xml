@@ -12,29 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ddb58b1-6788-45fb-85ad-c4fc5fd446cc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AnomalyDrive/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AnomalyDrive/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AnomalyDrive/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AnomalyDrive/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Config/DefaultEditor.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultEditor.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Body.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Body.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Body_FuelLid.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Body_FuelLid.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_DoorF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_DoorF.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Door_R.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Door_R.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Engine.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Engine.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Exaust.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Exaust.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_GearStick.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_GearStick.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_HoodF.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_HoodF.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_HoodR.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_HoodR.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_LightR.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_LightR.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Pedal.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Pedal.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Radiator.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Radiator.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Rim.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Rim.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Seat.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Seat.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_SteeringWheel.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_SteeringWheel.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Tire.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_Tire.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_battery.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Cars/OldCar/SM_OldCar_battery.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Core/Levels/LVL_CarShowcase.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Core/Levels/LVL_CarShowcase.umap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.blend" beforeDir="false" afterPath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.blend" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.blend1" beforeDir="false" afterPath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.blend1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.fbx" beforeDir="false" afterPath="$PROJECT_DIR$/SourceAssets/Cars/OldCar/OldCar.fbx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AnomalyDrive/AnomalyDrive.Build.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AnomalyDrive/AnomalyDrive.Build.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AnomalyDrive/Private/DemoFunctions.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/AnomalyDrive/Public/DemoFunctions.h" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,19 +42,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;C++ Project.AnomalyDrive.executor&quot;: &quot;Debug&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "C++ Project.AnomalyDrive.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\Julien Rogel\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Julien Rogel\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\Julien Rogel\\AppData\\Local\\Symbols\\src"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="C++ Project.AnomalyDrive">
     <configuration name="AnomalyDrive" type="CppProject" factoryName="C++ Project">
       <configuration_1>

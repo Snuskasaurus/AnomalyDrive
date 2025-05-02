@@ -16,7 +16,10 @@ public class AnomalyDrive : ModuleRules
 			"InputCore"
 		});
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[]
+		{
+			"VehicleSystemPlugin"
+		});
 
 		SetupModulePhysicsSupport(Target);
 	}
