@@ -8,17 +8,14 @@ public class AnomalyDrive : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[]
+		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"Core", 
 			"CoreUObject", 
 			"Engine", 
-			"InputCore"
-		});
-
-		PrivateDependencyModuleNames.AddRange(new string[]
-		{
-			"VehicleSystemPlugin"
+			"InputCore",
+			"VehicleSystemPlugin", 
+			"EnhancedInput"
 		});
 
 		SetupModulePhysicsSupport(Target);
