@@ -15,6 +15,10 @@ class AAnomaCarPart : public AActor
 public:
 	AAnomaCarPart();
 
+public:
+	const FCarPartDesc& GetCarCarPartDesc() const { return CarPartDesc; };
+	const FCarPartStatus& GetCarPartStatus() const { return CarPartStatus; };
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
