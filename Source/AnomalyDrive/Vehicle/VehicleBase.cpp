@@ -1,11 +1,16 @@
 ﻿// Copyright (c) 2025 Julien Rogel. All rights reserved.
 
 #include "VehicleBase.h"
+#include "Components/BoxComponent.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 AVehicleBase::AVehicleBase()
 {
-	
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void AVehicleBase::BeginPlay()
+{
+	Super::BeginPlay();
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 bool AVehicleBase::HasInstalledCarPart(ECarPartLocation CarPartLocation) const
@@ -51,5 +56,23 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaCarPar
 	CarPartHolder.CarPartActor = CarPartActor;
 	
 	InstalledCarParts.Add(CarPartLocation, CarPartHolder);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void AVehicleBase::ConstructAvailableCarPartColliders()
+{
+	FAttachmentTransformRules AttachmentTransformRules = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
+	AttachmentTransformRules.bWeldSimulatedBodies = true;
+	
+	for (const FAvailableCarPartHolder& AvailableCarPart : AvailableCarParts)
+	{
+		UBoxComponent* BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), NAME_None, RF_Transactional);
+		BoxComponent->SetupAttachment(VehicleMesh, AvailableCarPart.SocketName);
+		BoxComponent->RegisterComponent();
+		BoxComponent->SetCollisionProfileName(TEXT("Interactable"));
+		BoxComponent->InitBoxExtent(FVector(10.0f));
+		BoxComponent->ComponentTags.Add(AvailableCarPart.SocketName);
+		BoxComponent->bVisualizeComponent = true;
+		this->AddInstanceComponent(BoxComponent);
+	}
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------

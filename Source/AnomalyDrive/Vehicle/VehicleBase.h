@@ -9,6 +9,15 @@
 #include "VehicleBase.generated.h"
 
 USTRUCT(BlueprintType)
+struct FAvailableCarPartHolder
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) ECarPartLocation CarPartLocation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FName SocketName;
+};
+
+USTRUCT(BlueprintType)
 struct FCarPartHolder
 {
 	GENERATED_BODY()
@@ -24,12 +33,18 @@ class ANOMALYDRIVE_API AVehicleBase : public AVehicleSystemBase
 public:
 	AVehicleBase();
 
+protected:
+	virtual void BeginPlay() override;
+	
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) bool HasInstalledCarPart(ECarPartLocation CarPartLocation) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaCarPart* CarPartActor) const;
 	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaCarPart* CarPartActor);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<ECarPartLocation> AvailableCarParts;
+	UFUNCTION(BlueprintCallable) void ConstructAvailableCarPartColliders();
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FAvailableCarPartHolder> AvailableCarParts;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TMap<ECarPartLocation, FCarPartHolder> InstalledCarParts;
 };
