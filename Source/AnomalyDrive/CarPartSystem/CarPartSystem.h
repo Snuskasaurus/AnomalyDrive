@@ -68,7 +68,7 @@ enum class ECarPartLocation : uint8
 
 namespace CarPartUtility
 {
-	inline bool CarPartTypeIsCompatibleWithCarPartLocation(ECarPartType CarPartType, ECarPartLocation CarPartLocation)
+	static bool CarPartTypeIsCompatibleWithCarPartLocation(const ECarPartType CarPartType, const ECarPartLocation CarPartLocation)
 	{
 		switch (CarPartType)
 		{
@@ -103,6 +103,41 @@ namespace CarPartUtility
 		}
 		return false;
 	}
+	
+	static ECarPartLocation FNameToCarPartLocation(const FName& Name)
+	{
+		if		(Name == "Engine") 				return ECarPartLocation::Engine;
+		else if (Name == "Battery") 			return ECarPartLocation::Battery;
+		else if (Name == "SteeringWheel") 		return ECarPartLocation::SteeringWheel;
+		else if (Name == "SeatFrontLeft") 		return ECarPartLocation::SeatFrontLeft;
+		else if (Name == "SeatRearLeft") 		return ECarPartLocation::SeatRearLeft;
+		else if (Name == "SeatFrontRight") 		return ECarPartLocation::SeatFrontRight;
+		else if (Name == "SeatRearRight") 		return ECarPartLocation::SeatRearRight;
+		else if (Name == "TireFrontLeft") 		return ECarPartLocation::TireFrontLeft;
+		else if (Name == "TireRearLeft") 		return ECarPartLocation::TireRearLeft;
+		else if (Name == "TireFrontRight") 		return ECarPartLocation::TireFrontRight;
+		else if (Name == "TireRearRight") 		return ECarPartLocation::TireRearRight;
+		else if (Name == "RimFrontLeft") 		return ECarPartLocation::RimFrontLeft;
+		else if (Name == "RimRearLeft") 		return ECarPartLocation::RimRearLeft;
+		else if (Name == "RimFrontRight") 		return ECarPartLocation::RimFrontRight;
+		else if (Name == "RimRearRight") 		return ECarPartLocation::RimRearRight;
+		else if (Name == "Exhaust") 			return ECarPartLocation::Exhaust;
+		else if (Name == "GearStick") 			return ECarPartLocation::GearStick;
+		else if (Name == "HoodFront") 			return ECarPartLocation::HoodFront;
+		else if (Name == "HoodRear") 			return ECarPartLocation::HoodRear;
+		else if (Name == "PedalGas") 			return ECarPartLocation::PedalGas;
+		else if (Name == "PedalClutch") 		return ECarPartLocation::PedalClutch;
+		else if (Name == "PedalBrake") 			return ECarPartLocation::PedalBrake;
+		else if (Name == "Radiator") 			return ECarPartLocation::Radiator;
+		else if (Name == "DoorFrontLeft") 		return ECarPartLocation::DoorFrontLeft;
+		else if (Name == "DoorRearLeft") 		return ECarPartLocation::DoorRearLeft;
+		else if (Name == "DoorFrontRight") 		return ECarPartLocation::DoorFrontRight;
+		else if (Name == "DoorRearRight") 		return ECarPartLocation::DoorRearRight;
+
+		return ECarPartLocation::None; // fallback
+	}
+
+	
 }
 
 USTRUCT(BlueprintType)

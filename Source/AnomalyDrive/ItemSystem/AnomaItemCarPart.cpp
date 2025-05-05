@@ -1,19 +1,19 @@
 ﻿// Copyright (c) 2025 Julien Rogel. All rights reserved.
 
-#include "AnomaCarPart.h"
+#include "AnomaItemCarPart.h"
 
-AAnomaCarPart::AAnomaCarPart()
+AAnomaItemCarPart::AAnomaItemCarPart()
 {
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void AAnomaCarPart::BeginPlay()
+void AAnomaItemCarPart::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-void AAnomaCarPart::Tick(float DeltaTime)
+void AAnomaItemCarPart::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }

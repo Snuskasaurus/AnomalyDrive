@@ -3,17 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CarPartSystem.h"
+#include "AnomaItem.h"
+#include "AnomalyDrive/CarPartSystem/CarPartSystem.h"
+#include "AnomalyDrive/ItemSystem/AnomaItem.h"
 #include "GameFramework/Actor.h"
-#include "AnomaCarPart.generated.h"
+#include "AnomaItemCarPart.generated.h"
 
 UCLASS(BlueprintType, Abstract)
-class AAnomaCarPart : public AActor
+class AAnomaItemCarPart : public AAnomaItem
 {
 	GENERATED_BODY()
 
 public:
-	AAnomaCarPart();
+	AAnomaItemCarPart();
 
 public:
 	const FCarPartDesc& GetCarCarPartDesc() const { return CarPartDesc; };

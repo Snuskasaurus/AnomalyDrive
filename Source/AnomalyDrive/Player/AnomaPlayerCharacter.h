@@ -6,6 +6,10 @@
 #include "Logging/LogMacros.h"
 #include "AnomaPlayerCharacter.generated.h"
 
+class AAnomaItem;
+enum class ECarPartLocation : uint8;
+class UBoxComponent;
+class AVehicleBase;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -24,29 +28,63 @@ public:
 	
 	AAnomaPlayerCharacter();
 
-public:
+public: /// Components accessors ---------------------------------------------------------------------------------------
 	
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
-protected:
+protected: /// Unreal overrides ----------------------------------------------------------------------------------------
+
+	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
+	virtual void Tick(float DeltaSeconds) override;
+	virtual void BeginReplication() override;
+	virtual void NotifyControllerChanged() override;
+	
+protected: /// Inputs functions ----------------------------------------------------------------------------------------
 
 	UFUNCTION(BlueprintCallable)
 	void Move(const FVector2D& MovementVector);
 
 	UFUNCTION(BlueprintCallable)
 	void Look(const FVector2D& LookAxisVector);
-
-protected:
 	
-	virtual void NotifyControllerChanged() override;
-
-protected:
+	UFUNCTION(BlueprintCallable)
+	void Interact();
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
+private: /// Private Items and interactions functions ------------------------------------------------------------------
+
+	void TickInteractionTrace(float DeltaSeconds);
+	void PickUpItem(AAnomaItem* Item);
+	void DropItemInHand();
+	void InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider);
+	void UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
+	void InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
+
+protected: /// Components ----------------------------------------------------------------------------------------------
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	UCameraComponent* FirstPersonCameraComponent;
+
+protected: /// Items and interactions variables ------------------------------------------------------------------------
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float InteractionRange = 160.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float InteractionRadius = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<ETraceTypeQuery> InteractionTraceQuery = ETraceTypeQuery::TraceTypeQuery3;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int InventoryIndexInHand = 0;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<AAnomaItem*> ItemInInventory;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TArray<FHitResult> HitResultInteraction;
 };
 

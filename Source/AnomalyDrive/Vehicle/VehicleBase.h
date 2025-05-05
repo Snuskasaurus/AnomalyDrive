@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "VehicleSystemBase.h"
-#include "AnomalyDrive/CarPartSystem/AnomaCarPart.h"
 #include "AnomalyDrive/CarPartSystem/CarPartSystem.h"
 #include "VehicleBase.generated.h"
+
+class AAnomaItemCarPart;
 
 USTRUCT(BlueprintType)
 struct FAvailableCarPartHolder
@@ -22,7 +23,7 @@ struct FCarPartHolder
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) AAnomaCarPart* CarPartActor = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) AAnomaItemCarPart* CarPartActor = nullptr;
 };
 
 UCLASS(Blueprintable, Abstract)
@@ -39,8 +40,8 @@ protected:
 	
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) bool HasInstalledCarPart(ECarPartLocation CarPartLocation) const;
-	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaCarPart* CarPartActor) const;
-	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaCarPart* CarPartActor);
+	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const;
+	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPartActor);
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FAvailableCarPartHolder> AvailableCarParts;

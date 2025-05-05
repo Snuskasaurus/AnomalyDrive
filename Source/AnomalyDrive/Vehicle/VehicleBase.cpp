@@ -2,6 +2,7 @@
 
 #include "VehicleBase.h"
 #include "Components/BoxComponent.h"
+#include "AnomalyDrive/ItemSystem/AnomaItemCarPart.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 AVehicleBase::AVehicleBase()
@@ -50,7 +51,7 @@ bool AVehicleBase::HasInstalledCarPart(ECarPartLocation CarPartLocation) const
 	return false;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
-ECommonCarPartResult AVehicleBase::CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaCarPart* CarPartActor) const
+ECommonCarPartResult AVehicleBase::CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const
 {
 	const auto CarPartDesc = CarPartActor->GetCarCarPartDesc();
 	
@@ -67,7 +68,7 @@ ECommonCarPartResult AVehicleBase::CanInstallCarPart(ECarPartLocation CarPartLoc
 	return ECommonCarPartResult::Success;
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
-void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaCarPart* CarPartActor)
+void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPartActor)
 {
 #if !UE_BUILD_SHIPPING
 	ensureAlways(CanInstallCarPart(CarPartLocation, CarPartActor) == ECommonCarPartResult::Success);
