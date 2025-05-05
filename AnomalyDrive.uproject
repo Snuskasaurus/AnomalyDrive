@@ -16,11 +16,13 @@
 	"Plugins": [
 		{
 			"Name": "VehicleSystemPlugin",
-			"Enabled": true
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/9577489aa3264ecf94142dad1bc2956c"
 		},
 		{
 			"Name": "RMAImGui",
-			"Enabled": true
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/cf433d3a4993469fa3292b13fdc1a91f"
 		},
 		{
 			"Name": "Landmass",
