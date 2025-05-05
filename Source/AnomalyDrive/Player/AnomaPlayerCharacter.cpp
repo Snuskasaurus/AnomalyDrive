@@ -10,6 +10,7 @@
 #include "InputActionValue.h"
 #include "KismetTraceUtils.h"
 #include "AnomalyDrive/ItemSystem/AnomaItem.h"
+#include "AnomalyDrive/ItemSystem/AnomaItemCarPart.h"
 #include "AnomalyDrive/Vehicle/VehicleBase.h"
 #include "Engine/LocalPlayer.h"
 #include "Components/BoxComponent.h"
@@ -81,31 +82,16 @@ void AAnomaPlayerCharacter::DropItemInHand()
 	MeshItemInHand->SetStaticMesh(nullptr);
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider)
-{
-	if (!ensureAlways(CarPartCollider->ComponentTags.IsEmpty() == false))
-		return;
-	
-	const FName& Name = CarPartCollider->ComponentTags[0];
-	const ECarPartLocation CarPartLocation = CarPartUtility::FNameToCarPartLocation(Name);
-
-	const bool HasCarPartInstalled = Vehicle->HasInstalledCarPart(CarPartLocation);
-	if (HasCarPartInstalled == false)
-	{
-		UseVehicleCarPart(Vehicle, CarPartLocation);
-	}
-	else
-	{
-		InstallVehicleCarPart(Vehicle, CarPartLocation);
-	}
-}
-///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation)
 {
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation)
+void AAnomaPlayerCharacter::InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPart)
 {
+	ensureAlways(Vehicle);
+	ensureAlways(CarPartLocation != ECarPartLocation::None);
+	
+	Vehicle->InstallCarPart(CarPartLocation, CarPart);
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::BeginPlay()
@@ -206,24 +192,103 @@ void AAnomaPlayerCharacter::Interact()
 	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::StartVehicleBuild()
+void AAnomaPlayerCharacter::StartVehicleModification()
 {
+	AActor* ActorLookingAt = HitResultInteraction[0].GetActor();
+	UPrimitiveComponent* ComponentLookingAt = HitResultInteraction[0].GetComponent();
 	
+	if (ActorLookingAt == nullptr)
+	{
+		return;
+	}
+
+	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
+	bool HasItemInHand = ItemInHand != nullptr;
+	
+	if (ActorLookingAt->ActorHasTag("Vehicle") == false)
+	{
+		return;
+	}
+		
+	const auto VehicleComponent = Cast<UBoxComponent>(ComponentLookingAt);
+	check(VehicleComponent);
+	
+	VehicleAimedForModification = Cast<AVehicleBase>(ActorLookingAt);
+
+	const FName& Name = ComponentLookingAt->ComponentTags[0];
+	VehicleLocationAimedForModification = CarPartUtility::FNameToCarPartLocation(Name);
+	ensureAlways(VehicleLocationAimedForModification != ECarPartLocation::None);
+
+	const bool HasCarPartInstalled = VehicleAimedForModification->HasInstalledCarPart(VehicleLocationAimedForModification);
+
+	if (HasCarPartInstalled == true && HasItemInHand == true)
+		return; // TODO Julien Rogel (05/05/2025): To Improve 
+
+	if (HasCarPartInstalled == false && HasItemInHand == false)
+		return; // TODO Julien Rogel (05/05/2025): To Improve 
+	
+	check(IsModifyingVehicle == false);
+	IsModifyingVehicle = true;
+	if (HasCarPartInstalled == true)
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::UninstallCarPartCompleted,0.5f, false);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::InstallCarPartCompleted,0.5f, false);
+	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::EndVehicleBuild()
+void AAnomaPlayerCharacter::EndVehicleModification()
 {
+	if (IsModifyingVehicle == true)
+	{
+		CancelVehicleModification();
+	}
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::CancelVehicleModification()
+{
+	CleanVehicleModification();
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::CleanVehicleModification()
+{
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandleVehicleModification);
+	IsModifyingVehicle = false;
+	VehicleAimedForModification = nullptr;
+	VehicleLocationAimedForModification = ECarPartLocation::None;
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::InstallCarPartCompleted()
+{
+	check(IsModifyingVehicle == true);
+
+	AAnomaItem* Item = ItemInInventory[InventoryIndexInHand];
+	AAnomaItemCarPart* ItemCarPart = Cast<AAnomaItemCarPart>(Item);
+
+	InstallVehicleCarPart(VehicleAimedForModification, VehicleLocationAimedForModification, ItemCarPart);
 	
+	CleanVehicleModification();
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::UninstallCarPartCompleted()
+{
+	ensureAlways(false);
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::TickInteractionTrace(float DeltaSeconds)
 {
+	if (IsModifyingVehicle == true)
+		return;
+	
 	const FVector Start = FirstPersonCameraComponent->GetComponentLocation();
 	const FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * InteractionRange;
 	const TArray<AActor*> ActorsToIgnore;
 	HitResultInteraction.Empty();
 
 	UKismetSystemLibrary::SphereTraceMulti(GetWorld(), Start, End, InteractionRadius, InteractionTraceQuery, false,
-		ActorsToIgnore, EDrawDebugTrace::ForOneFrame, HitResultInteraction, true, FLinearColor::White, FLinearColor::Green, 0.0f);
+		ActorsToIgnore, EDrawDebugTrace::ForOneFrame,
+		HitResultInteraction, true, FLinearColor::White, FLinearColor::Green, 0.0f);
 }
 ///---------------------------------------------------------------------------------------------------------------------

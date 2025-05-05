@@ -17,12 +17,14 @@ void AVehicleBase::OnConstruction(const FTransform& Transform)
 	{
 		for (const FAvailableCarPartHolder& AvailableCarPart : AvailableCarParts)
 		{
-			UBoxComponent* BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), NAME_None, RF_Transactional);
+			FName Name = CarPartUtility::CarPartLocationToFName(AvailableCarPart.CarPartLocation);
+			
+			UBoxComponent* BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), Name, RF_Transactional);
 			BoxComponent->SetupAttachment(VehicleMesh, AvailableCarPart.SocketName);
 			BoxComponent->RegisterComponent();
 			BoxComponent->SetCollisionProfileName(TEXT("Interactable"));
 			BoxComponent->InitBoxExtent(FVector(10.0f));
-			BoxComponent->ComponentTags.Add(AvailableCarPart.SocketName);
+			BoxComponent->ComponentTags.Add(Name);
 			BoxComponent->bVisualizeComponent = true;
 			this->AddInstanceComponent(BoxComponent);
 		}
@@ -53,7 +55,7 @@ bool AVehicleBase::HasInstalledCarPart(ECarPartLocation CarPartLocation) const
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 ECommonCarPartResult AVehicleBase::CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const
 {
-	const auto CarPartDesc = CarPartActor->GetCarCarPartDesc();
+	const auto CarPartDesc = CarPartActor->GetItemCarPartDesc();
 	
 	if (CarPartUtility::CarPartTypeIsCompatibleWithCarPartLocation(CarPartDesc.CarPartType, CarPartLocation) == false)
 	{
@@ -78,5 +80,24 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCa
 	CarPartHolder.CarPartActor = CarPartActor;
 	
 	InstalledCarParts.Add(CarPartLocation, CarPartHolder);
+
+	UStaticMeshComponent* CarPartMesh = NewObject<UStaticMeshComponent>(this);
+	CarPartMesh->SetStaticMesh(CarPartActor->GetItemCarPartDesc().StaticMesh);
+	CarPartMesh->AttachToComponent(VehicleMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FindSocketNameFromCarPartLocation(CarPartLocation));
+	CarPartMesh->RegisterComponent();
+	CarPartMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 }
+
+FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const
+{
+	for (const FAvailableCarPartHolder& AvailableCarPartHolder : AvailableCarParts)
+	{
+		if (AvailableCarPartHolder.CarPartLocation == CarPartLocation)
+		{
+			return AvailableCarPartHolder.SocketName;
+		}
+	}
+	return TEXT("");
+}
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -9,6 +9,15 @@
 #include "GameFramework/Actor.h"
 #include "AnomaItemCarPart.generated.h"
 
+USTRUCT(BlueprintType)
+struct FItemCarPartDesc
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) ECarPartType CarPartType = ECarPartType::None;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) UStaticMesh* StaticMesh = nullptr;
+};
+
 UCLASS(BlueprintType, Abstract)
 class AAnomaItemCarPart : public AAnomaItem
 {
@@ -18,7 +27,7 @@ public:
 	AAnomaItemCarPart();
 
 public:
-	const FCarPartDesc& GetCarCarPartDesc() const { return CarPartDesc; };
+	const FItemCarPartDesc& GetItemCarPartDesc() const { return ItemCarPartDesc; };
 	const FCarPartStatus& GetCarPartStatus() const { return CarPartStatus; };
 	
 protected:
@@ -26,6 +35,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCarPartDesc CarPartDesc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FItemCarPartDesc ItemCarPartDesc;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCarPartStatus CarPartStatus;
 };

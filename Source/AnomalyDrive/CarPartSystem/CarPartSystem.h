@@ -137,17 +137,15 @@ namespace CarPartUtility
 		return ECarPartLocation::None; // fallback
 	}
 
+	static FName CarPartLocationToFName(ECarPartLocation CarPartLocation)
+	{
+		static const UEnum* EnumPtr = StaticEnum<ECarPartLocation>();
+		if (!EnumPtr) return NAME_None;
+		const FString NameString = EnumPtr->GetNameStringByValue(static_cast<int64>(CarPartLocation));
+		return FName(*NameString);
+	}
 	
 }
-
-USTRUCT(BlueprintType)
-struct FCarPartDesc
-{
-	GENERATED_BODY()
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) ECarPartType CarPartType = ECarPartType::None;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite) UStaticMesh* StaticMesh = nullptr;
-};
 
 USTRUCT(BlueprintType)
 struct FCarPartStatus

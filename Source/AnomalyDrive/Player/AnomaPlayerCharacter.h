@@ -2,6 +2,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AnomalyDrive/CarPartSystem/CarPartSystem.h"
+#include "AnomalyDrive/ItemSystem/AnomaItemCarPart.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "AnomaPlayerCharacter.generated.h"
@@ -56,10 +58,10 @@ protected: /// Inputs functions ------------------------------------------------
 	void Interact();
 
 	UFUNCTION(BlueprintCallable)
-	void StartVehicleBuild();
+	void StartVehicleModification();
 	
 	UFUNCTION(BlueprintCallable)
-	void EndVehicleBuild();
+	void EndVehicleModification();
 	
 private: /// Private Items and interactions functions ------------------------------------------------------------------
 
@@ -68,8 +70,13 @@ private: /// Private Items and interactions functions --------------------------
 	void DropItemInHand();
 	void InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider);
 	void UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
-	void InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
-
+	void InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPart);
+	
+	void CancelVehicleModification();
+	void CleanVehicleModification();
+	UFUNCTION() void InstallCarPartCompleted();
+	UFUNCTION() void UninstallCarPartCompleted();
+	
 protected: /// Components ----------------------------------------------------------------------------------------------
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh)
@@ -98,5 +105,11 @@ protected: /// Items and interactions variables --------------------------------
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<FHitResult> HitResultInteraction;
+
+	bool IsModifyingVehicle = false;
+	FTimerHandle TimerHandleVehicleModification;
+	UPROPERTY() AVehicleBase* VehicleAimedForModification = nullptr;
+	UPROPERTY() ECarPartLocation VehicleLocationAimedForModification = ECarPartLocation::None;
+	
 };
 

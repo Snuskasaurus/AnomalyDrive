@@ -42,6 +42,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) bool HasInstalledCarPart(ECarPartLocation CarPartLocation) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const;
 	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPartActor);
+
+private:
+	FName FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const; 
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FAvailableCarPartHolder> AvailableCarParts;
