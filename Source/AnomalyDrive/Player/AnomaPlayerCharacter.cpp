@@ -9,6 +9,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "KismetTraceUtils.h"
+#include "AnomalyDrive/ItemSystem/AnomaItem.h"
 #include "AnomalyDrive/Vehicle/VehicleBase.h"
 #include "Engine/LocalPlayer.h"
 #include "Components/BoxComponent.h"
@@ -39,6 +40,15 @@ AAnomaPlayerCharacter::AAnomaPlayerCharacter()
 		Mesh1P->CastShadow = false;
 		Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 	}
+
+	// Create a mesh component for the item in hand
+	{
+		MeshItemInHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+		MeshItemInHand->SetupAttachment(GetCapsuleComponent());
+		MeshItemInHand->bCastDynamicShadow = false;
+		MeshItemInHand->CastShadow = false;
+		MeshItemInHand->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::NotifyControllerChanged()
@@ -46,14 +56,29 @@ void AAnomaPlayerCharacter::NotifyControllerChanged()
 	Super::NotifyControllerChanged();
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::PickUpItem(AAnomaItem* Item)
+void AAnomaPlayerCharacter::PutItemInHand(AAnomaItem* Item)
 {
+	ensureAlways(ItemInInventory[InventoryIndexInHand] == nullptr);
+
+	const auto ItemDesc = Item->GetItemDesc();
 	
+	Item->OnPick(this);
+	ItemInInventory[InventoryIndexInHand] = Item;
+	MeshItemInHand->SetStaticMesh(ItemDesc.StaticMesh);
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::DropItemInHand()
 {
+	if (ItemInInventory[InventoryIndexInHand] == nullptr)
+		return;
 	
+	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
+	if(ItemInHand == nullptr)
+		return;
+		
+	ItemInHand->OnDrop(this);
+	ItemInInventory[InventoryIndexInHand] = nullptr;
+	MeshItemInHand->SetStaticMesh(nullptr);
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider)
@@ -125,6 +150,11 @@ void AAnomaPlayerCharacter::Look(const FVector2D& LookAxisVector)
 	AddControllerPitchInput(LookAxisVector.Y);
 }
 ///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::DropItem()
+{
+	DropItemInHand();
+}
+///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::Interact()
 {
 	if (HitResultInteraction.Num() == 0)
@@ -135,19 +165,55 @@ void AAnomaPlayerCharacter::Interact()
 	
 	if (ActorLookingAt == nullptr)
 		return;
-		
+
+	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
+	bool HasItemInHand = ItemInHand != nullptr;
+	
 	if (ActorLookingAt->ActorHasTag("Vehicle"))
 	{
 		const auto VehicleComponent = Cast<UBoxComponent>(ComponentLookingAt);
 		check(VehicleComponent);
 		
 		AVehicleBase* Vehicle = Cast<AVehicleBase>(ActorLookingAt);
-		InteractWithVehicleCarPart(Vehicle, VehicleComponent);
+
+		const FName& Name = ComponentLookingAt->ComponentTags[0];
+		const ECarPartLocation CarPartLocation = CarPartUtility::FNameToCarPartLocation(Name);
+
+		const bool HasCarPartInstalled = Vehicle->HasInstalledCarPart(CarPartLocation);
+		if (HasCarPartInstalled == false)
+		{
+			if (HasItemInHand == true)
+			{
+				return; // TODO Julien Rogel (05/05/2025)
+			}
+			else
+			{
+				UseVehicleCarPart(Vehicle, CarPartLocation);
+			}
+		}
 	}
 	else
 	{
-		
+		if (HasItemInHand == true)
+		{
+			return; // TODO Julien Rogel (05/05/2025): 
+		}
+		else
+		{
+			AAnomaItem* ItemActor = Cast<AAnomaItem>(ActorLookingAt);
+			PutItemInHand(ItemActor);
+		}
 	}
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::StartVehicleBuild()
+{
+	
+}
+///---------------------------------------------------------------------------------------------------------------------
+void AAnomaPlayerCharacter::EndVehicleBuild()
+{
+	
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::TickInteractionTrace(float DeltaSeconds)

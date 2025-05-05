@@ -50,12 +50,21 @@ protected: /// Inputs functions ------------------------------------------------
 	void Look(const FVector2D& LookAxisVector);
 	
 	UFUNCTION(BlueprintCallable)
+	void DropItem();
+	
+	UFUNCTION(BlueprintCallable)
 	void Interact();
+
+	UFUNCTION(BlueprintCallable)
+	void StartVehicleBuild();
+	
+	UFUNCTION(BlueprintCallable)
+	void EndVehicleBuild();
 	
 private: /// Private Items and interactions functions ------------------------------------------------------------------
 
 	void TickInteractionTrace(float DeltaSeconds);
-	void PickUpItem(AAnomaItem* Item);
+	void PutItemInHand(AAnomaItem* Item);
 	void DropItemInHand();
 	void InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider);
 	void UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
@@ -65,8 +74,11 @@ protected: /// Components ------------------------------------------------------
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh)
 	USkeletalMeshComponent* Mesh1P;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh)
+	UStaticMeshComponent* MeshItemInHand;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	UCameraComponent* FirstPersonCameraComponent;
 
 protected: /// Items and interactions variables ------------------------------------------------------------------------
