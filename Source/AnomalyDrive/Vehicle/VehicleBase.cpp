@@ -86,6 +86,11 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCa
 	CarPartMesh->AttachToComponent(VehicleMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FindSocketNameFromCarPartLocation(CarPartLocation));
 	CarPartMesh->RegisterComponent();
 	CarPartMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+
+	if (CarPartUtility::IsCarPartLocationModifyWheelBehaviour(CarPartLocation) == true)
+	{
+		BPE_OnWheelChanged(CarPartLocation);
+	}
 }
 
 FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const

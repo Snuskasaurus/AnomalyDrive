@@ -144,7 +144,22 @@ namespace CarPartUtility
 		const FString NameString = EnumPtr->GetNameStringByValue(static_cast<int64>(CarPartLocation));
 		return FName(*NameString);
 	}
-	
+
+	static bool IsCarPartLocationModifyWheelBehaviour(ECarPartLocation CarPartLocation)
+	{
+		if (CarPartLocation == ECarPartLocation::TireFrontLeft
+		 || CarPartLocation == ECarPartLocation::TireRearLeft
+		 || CarPartLocation == ECarPartLocation::TireFrontRight
+		 || CarPartLocation == ECarPartLocation::TireRearRight
+		 || CarPartLocation == ECarPartLocation::RimFrontLeft
+		 || CarPartLocation == ECarPartLocation::RimRearLeft
+		 || CarPartLocation == ECarPartLocation::RimFrontRight
+		 || CarPartLocation == ECarPartLocation::RimRearRight)
+		{
+			return true;
+		}
+		return false;
+	}
 }
 
 USTRUCT(BlueprintType)

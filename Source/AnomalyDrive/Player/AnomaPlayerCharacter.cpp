@@ -235,7 +235,11 @@ void AAnomaPlayerCharacter::StartVehicleModification()
 	}
 	else
 	{
-		GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::InstallCarPartCompleted,0.5f, false);
+		CarPartItemForModification = Cast<AAnomaItemCarPart>(ItemInHand);
+		if (VehicleAimedForModification->CanInstallCarPart(VehicleLocationAimedForModification, CarPartItemForModification) == ECommonCarPartResult::Success)
+		{
+			GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::InstallCarPartCompleted,0.5f, false);
+		}
 	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
@@ -264,10 +268,7 @@ void AAnomaPlayerCharacter::InstallCarPartCompleted()
 {
 	check(IsModifyingVehicle == true);
 
-	AAnomaItem* Item = ItemInInventory[InventoryIndexInHand];
-	AAnomaItemCarPart* ItemCarPart = Cast<AAnomaItemCarPart>(Item);
-
-	InstallVehicleCarPart(VehicleAimedForModification, VehicleLocationAimedForModification, ItemCarPart);
+	InstallVehicleCarPart(VehicleAimedForModification, VehicleLocationAimedForModification, CarPartItemForModification);
 	
 	CleanVehicleModification();
 }

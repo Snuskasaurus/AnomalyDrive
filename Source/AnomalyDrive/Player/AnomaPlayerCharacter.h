@@ -109,6 +109,7 @@ protected: /// Items and interactions variables --------------------------------
 	bool IsModifyingVehicle = false;
 	FTimerHandle TimerHandleVehicleModification;
 	UPROPERTY() AVehicleBase* VehicleAimedForModification = nullptr;
+	UPROPERTY() AAnomaItemCarPart* CarPartItemForModification = nullptr;
 	UPROPERTY() ECarPartLocation VehicleLocationAimedForModification = ECarPartLocation::None;
 	
 };

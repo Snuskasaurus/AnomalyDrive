@@ -43,6 +43,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const;
 	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPartActor);
 
+protected:
+	UFUNCTION(BlueprintImplementableEvent) void BPE_OnWheelChanged(ECarPartLocation CarPartLocation);
+
 private:
 	FName FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const; 
 	
