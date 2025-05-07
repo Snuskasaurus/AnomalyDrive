@@ -12,10 +12,17 @@ AVehicleBase::AVehicleBase()
 {
 	// Create a CameraComponent
 	{
-		FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
-		FirstPersonCameraComponent->SetupAttachment(VehicleMesh);
-		FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
-		FirstPersonCameraComponent->bUsePawnControlRotation = true;
+		InteriorPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("InteriorCamera"));
+		InteriorPersonCameraComponent->SetupAttachment(VehicleMesh);
+		InteriorPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
+		InteriorPersonCameraComponent->bUsePawnControlRotation = true;
+	}
+	// Create a CameraComponent
+	{
+		ExteriorPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("ExteriorCamera"));
+		ExteriorPersonCameraComponent->SetupAttachment(VehicleMesh);
+		ExteriorPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
+		ExteriorPersonCameraComponent->bUsePawnControlRotation = true;
 	}
 }
 

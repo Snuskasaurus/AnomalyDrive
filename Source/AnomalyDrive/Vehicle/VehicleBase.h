@@ -61,6 +61,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TMap<ECarPartLocation, FCarPartHolder> InstalledCarParts;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-	UCameraComponent* FirstPersonCameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera) UCameraComponent* InteriorPersonCameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera) UCameraComponent* ExteriorPersonCameraComponent;
 };
