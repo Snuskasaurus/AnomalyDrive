@@ -31,7 +31,8 @@ public:
 	AAnomaPlayerCharacter();
 
 public: /// Components accessors ---------------------------------------------------------------------------------------
-	
+
+	bool IsLocalPlayerControlled() const;
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
@@ -68,9 +69,6 @@ private: /// Private Items and interactions functions --------------------------
 	void TickInteractionTrace(float DeltaSeconds);
 	void PutItemInHand(AAnomaItem* Item);
 	void DropItemInHand();
-	void InteractWithVehicleCarPart(AVehicleBase* Vehicle, UBoxComponent* CarPartCollider);
-	void UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation);
-	void InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPart);
 	
 	void CancelVehicleModification();
 	void CleanVehicleModification();

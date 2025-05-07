@@ -7,6 +7,8 @@
 #include "AnomalyDrive/CarPartSystem/CarPartSystem.h"
 #include "VehicleBase.generated.h"
 
+class UCameraComponent;
+class AAnomaPlayerCharacter;
 class AAnomaItemCarPart;
 
 USTRUCT(BlueprintType)
@@ -37,11 +39,16 @@ public:
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
+
+public:
+	UFUNCTION(BlueprintCallable) void Look(const FVector2D& LookAxisVector);
+	UFUNCTION(BlueprintCallable) void Exit();
 	
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure) bool HasInstalledCarPart(ECarPartLocation CarPartLocation) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure) ECommonCarPartResult CanInstallCarPart(ECarPartLocation CarPartLocation, const AAnomaItemCarPart* CarPartActor) const;
 	UFUNCTION(BlueprintCallable) void InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPartActor);
+	UFUNCTION(BlueprintCallable) void InteractWithCarPart(AAnomaPlayerCharacter* Player, ECarPartLocation CarPartLocation);
 
 protected:
 	UFUNCTION(BlueprintImplementableEvent) void BPE_OnWheelChanged(ECarPartLocation CarPartLocation);
@@ -52,4 +59,8 @@ private:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) TArray<FAvailableCarPartHolder> AvailableCarParts;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly) TMap<ECarPartLocation, FCarPartHolder> InstalledCarParts;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
+	UCameraComponent* FirstPersonCameraComponent;
 };

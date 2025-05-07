@@ -52,6 +52,17 @@ AAnomaPlayerCharacter::AAnomaPlayerCharacter()
 	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
+bool AAnomaPlayerCharacter::IsLocalPlayerControlled() const
+{
+	if (GetNetMode() == NM_Standalone)
+		return true;
+	
+	if (GetController() == GetWorld()->GetFirstPlayerController())
+		return true;
+
+	return false;
+}
+///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
@@ -82,18 +93,6 @@ void AAnomaPlayerCharacter::DropItemInHand()
 	MeshItemInHand->SetStaticMesh(nullptr);
 }
 ///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::UseVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation)
-{
-}
-///---------------------------------------------------------------------------------------------------------------------
-void AAnomaPlayerCharacter::InstallVehicleCarPart(AVehicleBase* Vehicle, const ECarPartLocation CarPartLocation, AAnomaItemCarPart* CarPart)
-{
-	ensureAlways(Vehicle);
-	ensureAlways(CarPartLocation != ECarPartLocation::None);
-	
-	Vehicle->InstallCarPart(CarPartLocation, CarPart);
-}
-///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -109,8 +108,11 @@ void AAnomaPlayerCharacter::BeginDestroy()
 void AAnomaPlayerCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	
-	TickInteractionTrace(DeltaSeconds);
+
+	if (IsLocalPlayerControlled())
+	{
+		TickInteractionTrace(DeltaSeconds);
+	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::BeginReplication()
@@ -154,6 +156,9 @@ void AAnomaPlayerCharacter::Interact()
 
 	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
 	bool HasItemInHand = ItemInHand != nullptr;
+
+	if (HasItemInHand == true)
+		return;
 	
 	if (ActorLookingAt->ActorHasTag("Vehicle"))
 	{
@@ -166,29 +171,15 @@ void AAnomaPlayerCharacter::Interact()
 		const ECarPartLocation CarPartLocation = CarPartUtility::FNameToCarPartLocation(Name);
 
 		const bool HasCarPartInstalled = Vehicle->HasInstalledCarPart(CarPartLocation);
-		if (HasCarPartInstalled == false)
+		if (HasCarPartInstalled == true )
 		{
-			if (HasItemInHand == true)
-			{
-				return; // TODO Julien Rogel (05/05/2025)
-			}
-			else
-			{
-				UseVehicleCarPart(Vehicle, CarPartLocation);
-			}
+			Vehicle->InteractWithCarPart(this, CarPartLocation);
 		}
 	}
 	else
 	{
-		if (HasItemInHand == true)
-		{
-			return; // TODO Julien Rogel (05/05/2025): 
-		}
-		else
-		{
-			AAnomaItem* ItemActor = Cast<AAnomaItem>(ActorLookingAt);
-			PutItemInHand(ItemActor);
-		}
+		AAnomaItem* ItemActor = Cast<AAnomaItem>(ActorLookingAt);
+		PutItemInHand(ItemActor);
 	}
 }
 ///---------------------------------------------------------------------------------------------------------------------
@@ -268,7 +259,7 @@ void AAnomaPlayerCharacter::InstallCarPartCompleted()
 {
 	check(IsModifyingVehicle == true);
 
-	InstallVehicleCarPart(VehicleAimedForModification, VehicleLocationAimedForModification, CarPartItemForModification);
+	VehicleAimedForModification->InstallCarPart(VehicleLocationAimedForModification, CarPartItemForModification);
 	
 	CleanVehicleModification();
 }

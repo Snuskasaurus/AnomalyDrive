@@ -3,10 +3,20 @@
 #include "VehicleBase.h"
 #include "Components/BoxComponent.h"
 #include "AnomalyDrive/ItemSystem/AnomaItemCarPart.h"
+#include "AnomalyDrive/Player/AnomaPlayerCharacter.h"
+#include "AnomalyDrive/Player/MyPlayerController.h"
+#include "Camera/CameraComponent.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 AVehicleBase::AVehicleBase()
 {
+	// Create a CameraComponent
+	{
+		FirstPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+		FirstPersonCameraComponent->SetupAttachment(VehicleMesh);
+		FirstPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
+		FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	}
 }
 
 void AVehicleBase::OnConstruction(const FTransform& Transform)
@@ -35,6 +45,21 @@ void AVehicleBase::OnConstruction(const FTransform& Transform)
 void AVehicleBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void AVehicleBase::Look(const FVector2D& LookAxisVector)
+{
+	if (Controller == nullptr)
+		return;
+	
+	AddControllerYawInput(LookAxisVector.X);
+	AddControllerPitchInput(LookAxisVector.Y);
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void AVehicleBase::Exit()
+{
+	auto MyPlayerController = Cast<AMyPlayerController>(this->GetController());
+	MyPlayerController->ExitVehicle(this);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 bool AVehicleBase::HasInstalledCarPart(ECarPartLocation CarPartLocation) const
@@ -92,7 +117,17 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCa
 		BPE_OnWheelChanged(CarPartLocation);
 	}
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void AVehicleBase::InteractWithCarPart(AAnomaPlayerCharacter* Player, ECarPartLocation CarPartLocation)
+{
+	if (CarPartLocation == ECarPartLocation::SeatFrontLeft)
+	{
+		auto MyPlayerController = Cast<AMyPlayerController>(Player->GetController());
+		check(MyPlayerController);
+		MyPlayerController->EnterVehicle(this);
+	}
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
 FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const
 {
 	for (const FAvailableCarPartHolder& AvailableCarPartHolder : AvailableCarParts)
@@ -104,5 +139,4 @@ FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLo
 	}
 	return TEXT("");
 }
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
