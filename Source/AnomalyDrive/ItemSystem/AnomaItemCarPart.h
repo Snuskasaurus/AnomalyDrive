@@ -15,6 +15,9 @@ struct FItemCarPartDesc
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) ECarPartType CarPartType = ECarPartType::None;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) ECarPartBehaviour CarPartBehaviour = ECarPartBehaviour::None;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCarPartBehaviour_Common CommonCarPartBehaviour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite) FCarPartBehaviour_Wheel WheelCarPartBehaviour;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) UStaticMesh* StaticMesh = nullptr;
 };
 

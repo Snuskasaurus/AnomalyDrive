@@ -12,6 +12,37 @@ enum class ECommonCarPartResult : uint8
 };
 
 UENUM(BlueprintType)
+enum class ECarPartBehaviour: uint8
+{
+	None,
+	Engine,
+	Wheel
+};
+
+USTRUCT(BlueprintType)
+struct FCarPartBehaviour_Common
+{
+	GENERATED_BODY()
+
+	// Various
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour") float Weight;
+};
+
+USTRUCT(BlueprintType)
+struct FCarPartBehaviour_Wheel
+{
+	GENERATED_BODY()
+
+	// Various
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour|Wheel") float Radius = 15.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour|Wheel") FVector2f TireFriction = { 1.4f, 1.4f };
+	// Brakes
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour|Wheel|Brakes") bool HasBrake = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour|Wheel|Brakes") float BrakeTorque = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="CarPart|Behaviour|Wheel|Brakes") float RollingResistance = 0.01f;
+};
+
+UENUM(BlueprintType)
 enum class ECarPartType: uint8
 {
 	None,
@@ -145,7 +176,7 @@ namespace CarPartUtility
 		return FName(*NameString);
 	}
 
-	static bool IsCarPartLocationModifyWheelBehaviour(ECarPartLocation CarPartLocation)
+	static bool IsCarPartLocationModifyingWheelBehaviour(ECarPartLocation CarPartLocation)
 	{
 		if (CarPartLocation == ECarPartLocation::TireFrontLeft
 		 || CarPartLocation == ECarPartLocation::TireRearLeft

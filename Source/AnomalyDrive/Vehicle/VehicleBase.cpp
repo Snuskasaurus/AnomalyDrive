@@ -18,7 +18,6 @@ AVehicleBase::AVehicleBase()
 		InteriorPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
 		InteriorPersonCameraComponent->bUsePawnControlRotation = true;
 	}
-
 	
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	{
@@ -130,9 +129,9 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCa
 	CarPartMesh->RegisterComponent();
 	CarPartMesh->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
 
-	if (CarPartUtility::IsCarPartLocationModifyWheelBehaviour(CarPartLocation) == true)
+	if (CarPartUtility::IsCarPartLocationModifyingWheelBehaviour(CarPartLocation) == true)
 	{
-		BPE_OnWheelChanged(CarPartLocation);
+		OnWheelPartChanged(CarPartLocation);
 	}
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -144,6 +143,30 @@ void AVehicleBase::InteractWithCarPart(AAnomaPlayerCharacter* Player, ECarPartLo
 		check(MyPlayerController);
 		MyPlayerController->EnterVehicle(this);
 	}
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+void IncrementNewWheelPartInfo(FCarPartBehaviour_Wheel& OldWheelCarPartBehaviour, const FCarPartBehaviour_Wheel& NewWheelCarPartBehaviour)
+{
+	OldWheelCarPartBehaviour.Radius = FMath::Max(NewWheelCarPartBehaviour.Radius, OldWheelCarPartBehaviour.Radius);
+	OldWheelCarPartBehaviour.BrakeTorque += NewWheelCarPartBehaviour.BrakeTorque;
+	OldWheelCarPartBehaviour.HasBrake = OldWheelCarPartBehaviour.HasBrake || NewWheelCarPartBehaviour.HasBrake;
+	OldWheelCarPartBehaviour.RollingResistance += NewWheelCarPartBehaviour.RollingResistance;
+	OldWheelCarPartBehaviour.TireFriction += NewWheelCarPartBehaviour.TireFriction;
+}
+void AVehicleBase::OnWheelPartChanged(const ECarPartLocation CarPartLocation)
+{
+	FCarPartBehaviour_Wheel NewWheelPartInfo;
+
+	for (const auto Element : InstalledCarParts)
+	{
+		if (Element.Key != CarPartLocation)
+			continue;
+		
+		auto CarPartDesc = Element.Value.CarPartActor->GetItemCarPartDesc();
+		IncrementNewWheelPartInfo(NewWheelPartInfo, CarPartDesc.WheelCarPartBehaviour);
+	}
+	
+	BPE_OnWheelPartChanged(CarPartLocation, NewWheelPartInfo);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const

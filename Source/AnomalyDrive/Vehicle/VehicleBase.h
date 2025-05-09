@@ -25,7 +25,7 @@ USTRUCT(BlueprintType)
 struct FCarPartHolder
 {
 	GENERATED_BODY()
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite) AAnomaItemCarPart* CarPartActor = nullptr;
 };
 
@@ -52,8 +52,10 @@ public:
 	UFUNCTION(BlueprintCallable) void InteractWithCarPart(AAnomaPlayerCharacter* Player, ECarPartLocation CarPartLocation);
 
 protected:
-	UFUNCTION(BlueprintImplementableEvent) void BPE_OnWheelChanged(ECarPartLocation CarPartLocation);
-
+	UFUNCTION(BlueprintImplementableEvent) void BPE_OnWheelPartChanged(ECarPartLocation CarPartLocation, FCarPartBehaviour_Wheel CarWheelPartBehaviour);
+private:
+	void OnWheelPartChanged(ECarPartLocation CarPartLocation);
+	
 private:
 	FName FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const; 
 	
