@@ -185,13 +185,14 @@ void AAnomaPlayerCharacter::Interact()
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::StartVehicleModification()
 {
+	if (HitResultInteraction.IsEmpty())
+		return;
+	
 	AActor* ActorLookingAt = HitResultInteraction[0].GetActor();
 	UPrimitiveComponent* ComponentLookingAt = HitResultInteraction[0].GetComponent();
 	
 	if (ActorLookingAt == nullptr)
-	{
 		return;
-	}
 
 	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
 	bool HasItemInHand = ItemInHand != nullptr;

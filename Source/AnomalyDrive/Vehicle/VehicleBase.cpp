@@ -6,21 +6,32 @@
 #include "AnomalyDrive/Player/AnomaPlayerCharacter.h"
 #include "AnomalyDrive/Player/MyPlayerController.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 AVehicleBase::AVehicleBase()
 {
-	// Create a CameraComponent
+	// Create a Interior CameraComponent
 	{
 		InteriorPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("InteriorCamera"));
 		InteriorPersonCameraComponent->SetupAttachment(VehicleMesh);
 		InteriorPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
 		InteriorPersonCameraComponent->bUsePawnControlRotation = true;
 	}
-	// Create a CameraComponent
+
+	
+	// Create a camera boom (pulls in towards the player if there is a collision)
+	{
+		ExteriorCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+		ExteriorCameraBoom->SetupAttachment(VehicleMesh);
+		ExteriorCameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+		ExteriorCameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	}
+	
+	// Create a Exterior CameraComponent
 	{
 		ExteriorPersonCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("ExteriorCamera"));
-		ExteriorPersonCameraComponent->SetupAttachment(VehicleMesh);
+		ExteriorPersonCameraComponent->SetupAttachment(ExteriorCameraBoom);
 		ExteriorPersonCameraComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f)); // Position the camera
 		ExteriorPersonCameraComponent->bUsePawnControlRotation = true;
 	}

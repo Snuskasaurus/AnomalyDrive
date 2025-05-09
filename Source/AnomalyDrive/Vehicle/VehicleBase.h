@@ -7,6 +7,7 @@
 #include "AnomalyDrive/CarPartSystem/CarPartSystem.h"
 #include "VehicleBase.generated.h"
 
+class USpringArmComponent;
 class UCameraComponent;
 class AAnomaPlayerCharacter;
 class AAnomaItemCarPart;
@@ -63,4 +64,5 @@ protected:
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera) UCameraComponent* InteriorPersonCameraComponent;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera) UCameraComponent* ExteriorPersonCameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera) USpringArmComponent* ExteriorCameraBoom;
 };
