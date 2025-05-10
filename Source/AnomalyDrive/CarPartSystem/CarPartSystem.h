@@ -51,6 +51,7 @@ enum class ECarPartType: uint8
 	SteeringWheel,
 	Seat,
 	Tire,
+	Brake,
 	Rim,
 	Exhaust,
 	GearStick,
@@ -75,14 +76,10 @@ enum class ECarPartLocation : uint8
 	SeatRearLeft,
 	SeatFrontRight,
 	SeatRearRight,
-	TireFrontLeft,
-	TireRearLeft,
-	TireFrontRight,
-	TireRearRight,
-	RimFrontLeft,
-	RimRearLeft,
-	RimFrontRight,
-	RimRearRight,
+	WheelFrontLeft,
+	WheelRearLeft,
+	WheelFrontRight,
+	WheelRearRight,
 	Exhaust,
 	GearStick,
 	HoodFront,
@@ -111,14 +108,18 @@ namespace CarPartUtility
 													|| CarPartLocation == ECarPartLocation::SeatFrontRight
 													|| CarPartLocation == ECarPartLocation::SeatRearLeft
 													|| CarPartLocation == ECarPartLocation::SeatRearRight;
-			case ECarPartType::Tire:			return CarPartLocation == ECarPartLocation::TireFrontLeft
-													|| CarPartLocation == ECarPartLocation::TireFrontRight
-													|| CarPartLocation == ECarPartLocation::TireRearLeft
-													|| CarPartLocation == ECarPartLocation::TireRearRight;
-			case ECarPartType::Rim:				return CarPartLocation == ECarPartLocation::RimFrontLeft
-													|| CarPartLocation == ECarPartLocation::RimFrontRight
-													|| CarPartLocation == ECarPartLocation::RimRearLeft
-													|| CarPartLocation == ECarPartLocation::RimRearRight;
+			case ECarPartType::Tire:			return CarPartLocation == ECarPartLocation::WheelFrontLeft
+													|| CarPartLocation == ECarPartLocation::WheelFrontRight
+													|| CarPartLocation == ECarPartLocation::WheelRearLeft
+													|| CarPartLocation == ECarPartLocation::WheelRearRight;
+			case ECarPartType::Rim:				return CarPartLocation == ECarPartLocation::WheelFrontLeft
+													|| CarPartLocation == ECarPartLocation::WheelFrontRight
+													|| CarPartLocation == ECarPartLocation::WheelRearLeft
+													|| CarPartLocation == ECarPartLocation::WheelRearRight;
+			case ECarPartType::Brake:			return CarPartLocation == ECarPartLocation::WheelFrontLeft
+													|| CarPartLocation == ECarPartLocation::WheelFrontRight
+													|| CarPartLocation == ECarPartLocation::WheelRearLeft
+													|| CarPartLocation == ECarPartLocation::WheelRearRight;
 			case ECarPartType::Exhaust:			return CarPartLocation == ECarPartLocation::Exhaust;
 			case ECarPartType::GearStick:		return CarPartLocation == ECarPartLocation::GearStick;
 			case ECarPartType::HoodFront:		return CarPartLocation == ECarPartLocation::HoodFront;
@@ -137,33 +138,29 @@ namespace CarPartUtility
 	
 	static ECarPartLocation FNameToCarPartLocation(const FName& Name)
 	{
-		if		(Name == "Engine") 				return ECarPartLocation::Engine;
-		else if (Name == "Battery") 			return ECarPartLocation::Battery;
-		else if (Name == "SteeringWheel") 		return ECarPartLocation::SteeringWheel;
-		else if (Name == "SeatFrontLeft") 		return ECarPartLocation::SeatFrontLeft;
-		else if (Name == "SeatRearLeft") 		return ECarPartLocation::SeatRearLeft;
-		else if (Name == "SeatFrontRight") 		return ECarPartLocation::SeatFrontRight;
-		else if (Name == "SeatRearRight") 		return ECarPartLocation::SeatRearRight;
-		else if (Name == "TireFrontLeft") 		return ECarPartLocation::TireFrontLeft;
-		else if (Name == "TireRearLeft") 		return ECarPartLocation::TireRearLeft;
-		else if (Name == "TireFrontRight") 		return ECarPartLocation::TireFrontRight;
-		else if (Name == "TireRearRight") 		return ECarPartLocation::TireRearRight;
-		else if (Name == "RimFrontLeft") 		return ECarPartLocation::RimFrontLeft;
-		else if (Name == "RimRearLeft") 		return ECarPartLocation::RimRearLeft;
-		else if (Name == "RimFrontRight") 		return ECarPartLocation::RimFrontRight;
-		else if (Name == "RimRearRight") 		return ECarPartLocation::RimRearRight;
-		else if (Name == "Exhaust") 			return ECarPartLocation::Exhaust;
-		else if (Name == "GearStick") 			return ECarPartLocation::GearStick;
-		else if (Name == "HoodFront") 			return ECarPartLocation::HoodFront;
-		else if (Name == "HoodRear") 			return ECarPartLocation::HoodRear;
-		else if (Name == "PedalGas") 			return ECarPartLocation::PedalGas;
-		else if (Name == "PedalClutch") 		return ECarPartLocation::PedalClutch;
-		else if (Name == "PedalBrake") 			return ECarPartLocation::PedalBrake;
-		else if (Name == "Radiator") 			return ECarPartLocation::Radiator;
-		else if (Name == "DoorFrontLeft") 		return ECarPartLocation::DoorFrontLeft;
-		else if (Name == "DoorRearLeft") 		return ECarPartLocation::DoorRearLeft;
-		else if (Name == "DoorFrontRight") 		return ECarPartLocation::DoorFrontRight;
-		else if (Name == "DoorRearRight") 		return ECarPartLocation::DoorRearRight;
+		if (Name == "Engine") 				return ECarPartLocation::Engine;
+		if (Name == "Battery") 				return ECarPartLocation::Battery;
+		if (Name == "SteeringWheel") 		return ECarPartLocation::SteeringWheel;
+		if (Name == "SeatFrontLeft") 		return ECarPartLocation::SeatFrontLeft;
+		if (Name == "SeatRearLeft") 		return ECarPartLocation::SeatRearLeft;
+		if (Name == "SeatFrontRight") 		return ECarPartLocation::SeatFrontRight;
+		if (Name == "SeatRearRight") 		return ECarPartLocation::SeatRearRight;
+		if (Name == "WheelFrontLeft") 		return ECarPartLocation::WheelFrontLeft;
+		if (Name == "WheelRearLeft") 		return ECarPartLocation::WheelRearLeft;
+		if (Name == "WheelFrontRight") 		return ECarPartLocation::WheelFrontRight;
+		if (Name == "WheelRearRight") 		return ECarPartLocation::WheelRearRight;
+		if (Name == "Exhaust") 				return ECarPartLocation::Exhaust;
+		if (Name == "GearStick") 			return ECarPartLocation::GearStick;
+		if (Name == "HoodFront") 			return ECarPartLocation::HoodFront;
+		if (Name == "HoodRear") 			return ECarPartLocation::HoodRear;
+		if (Name == "PedalGas") 			return ECarPartLocation::PedalGas;
+		if (Name == "PedalClutch") 			return ECarPartLocation::PedalClutch;
+		if (Name == "PedalBrake") 			return ECarPartLocation::PedalBrake;
+		if (Name == "Radiator") 			return ECarPartLocation::Radiator;
+		if (Name == "DoorFrontLeft") 		return ECarPartLocation::DoorFrontLeft;
+		if (Name == "DoorRearLeft") 		return ECarPartLocation::DoorRearLeft;
+		if (Name == "DoorFrontRight") 		return ECarPartLocation::DoorFrontRight;
+		if (Name == "DoorRearRight") 		return ECarPartLocation::DoorRearRight;
 
 		return ECarPartLocation::None; // fallback
 	}
@@ -178,14 +175,10 @@ namespace CarPartUtility
 
 	static bool IsCarPartLocationModifyingWheelBehaviour(ECarPartLocation CarPartLocation)
 	{
-		if (CarPartLocation == ECarPartLocation::TireFrontLeft
-		 || CarPartLocation == ECarPartLocation::TireRearLeft
-		 || CarPartLocation == ECarPartLocation::TireFrontRight
-		 || CarPartLocation == ECarPartLocation::TireRearRight
-		 || CarPartLocation == ECarPartLocation::RimFrontLeft
-		 || CarPartLocation == ECarPartLocation::RimRearLeft
-		 || CarPartLocation == ECarPartLocation::RimFrontRight
-		 || CarPartLocation == ECarPartLocation::RimRearRight)
+		if (CarPartLocation == ECarPartLocation::WheelFrontLeft
+		 || CarPartLocation == ECarPartLocation::WheelRearLeft
+		 || CarPartLocation == ECarPartLocation::WheelFrontRight
+		 || CarPartLocation == ECarPartLocation::WheelRearRight)
 		{
 			return true;
 		}

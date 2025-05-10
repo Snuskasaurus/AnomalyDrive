@@ -35,29 +35,11 @@ AVehicleBase::AVehicleBase()
 		ExteriorPersonCameraComponent->bUsePawnControlRotation = true;
 	}
 }
-
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
 void AVehicleBase::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-
-	// Create the car parts colliders components
-	{
-		for (const FAvailableCarPartHolder& AvailableCarPart : AvailableCarParts)
-		{
-			FName Name = CarPartUtility::CarPartLocationToFName(AvailableCarPart.CarPartLocation);
-			
-			UBoxComponent* BoxComponent = NewObject<UBoxComponent>(this, UBoxComponent::StaticClass(), Name, RF_Transactional);
-			BoxComponent->SetupAttachment(VehicleMesh, AvailableCarPart.SocketName);
-			BoxComponent->RegisterComponent();
-			BoxComponent->SetCollisionProfileName(TEXT("Interactable"));
-			BoxComponent->InitBoxExtent(FVector(10.0f));
-			BoxComponent->ComponentTags.Add(Name);
-			BoxComponent->bVisualizeComponent = true;
-			this->AddInstanceComponent(BoxComponent);
-		}
-	}
 }
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 void AVehicleBase::BeginPlay()
 {
@@ -79,16 +61,34 @@ void AVehicleBase::Exit()
 	MyPlayerController->ExitVehicle(this);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
-bool AVehicleBase::HasInstalledCarPart(ECarPartLocation CarPartLocation) const
+bool AVehicleBase::HasInstalledCarPart(const ECarPartLocation CarPartLocation) const
+{
+	
+	for (auto InstalledCarPartElement : InstalledCarParts)
+	{
+		if (InstalledCarPartElement.CarPartLocation == CarPartLocation)
+		{
+			if (InstalledCarPartElement.CarPartActor != nullptr)
+				return true;
+			
+			return false;
+		}
+	}
+	return false;
+}
+//---------------------------------------------------------------------------------------------------------------------------------------------------------
+bool AVehicleBase::HasInstalledSpecificCarPart(const ECarPartLocation CarPartLocation, const ECarPartType CarPartType) const
 {
 	for (auto InstalledCarPartElement : InstalledCarParts)
 	{
-		if (InstalledCarPartElement.Key == CarPartLocation)
+		if (InstalledCarPartElement.CarPartLocation == CarPartLocation)
 		{
-			if (InstalledCarPartElement.Value.CarPartActor != nullptr)
+			if (InstalledCarPartElement.CarPartActor != nullptr)
 			{
-				return true;
+				if (InstalledCarPartElement.CarPartActor->GetItemCarPartDesc().CarPartType == CarPartType)
+					return true;
 			}
+			
 			return false;
 		}
 	}
@@ -104,7 +104,7 @@ ECommonCarPartResult AVehicleBase::CanInstallCarPart(ECarPartLocation CarPartLoc
 		return ECommonCarPartResult::Install_IncompatibleCarPartLocation;
 	}
 	
-	if (HasInstalledCarPart(CarPartLocation) == true)
+	if (HasInstalledSpecificCarPart(CarPartLocation, CarPartDesc.CarPartType) == true)
 	{
 		return ECommonCarPartResult::Install_CarPartLocationNotFree;
 	}
@@ -120,8 +120,8 @@ void AVehicleBase::InstallCarPart(ECarPartLocation CarPartLocation, AAnomaItemCa
 
 	FCarPartHolder CarPartHolder;
 	CarPartHolder.CarPartActor = CarPartActor;
-	
-	InstalledCarParts.Add(CarPartLocation, CarPartHolder);
+	CarPartHolder.CarPartLocation = CarPartLocation;
+	InstalledCarParts.Add(CarPartHolder);
 
 	UStaticMeshComponent* CarPartMesh = NewObject<UStaticMeshComponent>(this);
 	CarPartMesh->SetStaticMesh(CarPartActor->GetItemCarPartDesc().StaticMesh);
@@ -144,29 +144,49 @@ void AVehicleBase::InteractWithCarPart(AAnomaPlayerCharacter* Player, ECarPartLo
 		MyPlayerController->EnterVehicle(this);
 	}
 }
-//---------------------------------------------------------------------------------------------------------------------------------------------------------
-void IncrementNewWheelPartInfo(FCarPartBehaviour_Wheel& OldWheelCarPartBehaviour, const FCarPartBehaviour_Wheel& NewWheelCarPartBehaviour)
-{
-	OldWheelCarPartBehaviour.Radius = FMath::Max(NewWheelCarPartBehaviour.Radius, OldWheelCarPartBehaviour.Radius);
-	OldWheelCarPartBehaviour.BrakeTorque += NewWheelCarPartBehaviour.BrakeTorque;
-	OldWheelCarPartBehaviour.HasBrake = OldWheelCarPartBehaviour.HasBrake || NewWheelCarPartBehaviour.HasBrake;
-	OldWheelCarPartBehaviour.RollingResistance += NewWheelCarPartBehaviour.RollingResistance;
-	OldWheelCarPartBehaviour.TireFriction += NewWheelCarPartBehaviour.TireFriction;
-}
 void AVehicleBase::OnWheelPartChanged(const ECarPartLocation CarPartLocation)
 {
-	FCarPartBehaviour_Wheel NewWheelPartInfo;
+	FCarPartBehaviour_Wheel FinalWheelBehaviour;
+	int32 WheelStateBitMask = static_cast<int32>(EWheelState::None);
 
 	for (const auto Element : InstalledCarParts)
 	{
-		if (Element.Key != CarPartLocation)
+		if (Element.CarPartLocation != CarPartLocation)
 			continue;
-		
-		auto CarPartDesc = Element.Value.CarPartActor->GetItemCarPartDesc();
-		IncrementNewWheelPartInfo(NewWheelPartInfo, CarPartDesc.WheelCarPartBehaviour);
+
+		const auto CarPartDesc = Element.CarPartActor->GetItemCarPartDesc();
+
+		switch (CarPartDesc.CarPartType)
+		{
+			case ECarPartType::Tire:
+			{
+				WheelStateBitMask |= static_cast<int32>(EWheelState::Tire);
+			} break;
+			case ECarPartType::Brake:
+			{
+				WheelStateBitMask |= static_cast<int32>(EWheelState::Brake);
+			} break;
+			case ECarPartType::Rim:
+			{
+				WheelStateBitMask |= static_cast<int32>(EWheelState::Rim);
+			} break;
+		}
+
+		const auto NewItemWheelBehaviour = CarPartDesc.WheelCarPartBehaviour;
+
+		// Take the maximum values
+		FinalWheelBehaviour.Radius = FMath::Max(FinalWheelBehaviour.Radius, NewItemWheelBehaviour.Radius);
+		FinalWheelBehaviour.TireFriction = FMath::Max(FinalWheelBehaviour.TireFriction, NewItemWheelBehaviour.TireFriction);
+
+		// True if at least 1 true
+		FinalWheelBehaviour.HasBrake = FinalWheelBehaviour.HasBrake || NewItemWheelBehaviour.HasBrake;
+
+		// Increment
+		FinalWheelBehaviour.BrakeTorque += FinalWheelBehaviour.BrakeTorque;
+		FinalWheelBehaviour.RollingResistance += NewItemWheelBehaviour.RollingResistance;
 	}
 	
-	BPE_OnWheelPartChanged(CarPartLocation, NewWheelPartInfo);
+	BPE_OnWheelPartChanged(CarPartLocation, FinalWheelBehaviour, WheelStateBitMask);
 }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------
 FName AVehicleBase::FindSocketNameFromCarPartLocation(ECarPartLocation CarPartLocation) const

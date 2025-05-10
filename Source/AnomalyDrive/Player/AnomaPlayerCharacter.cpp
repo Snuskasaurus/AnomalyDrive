@@ -194,8 +194,6 @@ void AAnomaPlayerCharacter::StartVehicleModification()
 	if (ActorLookingAt == nullptr)
 		return;
 
-	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
-	bool HasItemInHand = ItemInHand != nullptr;
 	
 	if (ActorLookingAt->ActorHasTag("Vehicle") == false)
 	{
@@ -211,28 +209,22 @@ void AAnomaPlayerCharacter::StartVehicleModification()
 	VehicleLocationAimedForModification = CarPartUtility::FNameToCarPartLocation(Name);
 	ensureAlways(VehicleLocationAimedForModification != ECarPartLocation::None);
 
-	const bool HasCarPartInstalled = VehicleAimedForModification->HasInstalledCarPart(VehicleLocationAimedForModification);
-
-	if (HasCarPartInstalled == true && HasItemInHand == true)
-		return; // TODO Julien Rogel (05/05/2025): To Improve 
-
-	if (HasCarPartInstalled == false && HasItemInHand == false)
+	AAnomaItem* ItemInHand = ItemInInventory[InventoryIndexInHand];
+	const bool HasItemInHand = ItemInHand != nullptr;
+	if (HasItemInHand == false)
 		return; // TODO Julien Rogel (05/05/2025): To Improve 
 	
 	check(IsModifyingVehicle == false);
 	IsModifyingVehicle = true;
-	if (HasCarPartInstalled == true)
-	{
-		GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::UninstallCarPartCompleted,0.5f, false);
-	}
-	else
-	{
-		CarPartItemForModification = Cast<AAnomaItemCarPart>(ItemInHand);
-		if (VehicleAimedForModification->CanInstallCarPart(VehicleLocationAimedForModification, CarPartItemForModification) == ECommonCarPartResult::Success)
-		{
-			GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::InstallCarPartCompleted,0.5f, false);
-		}
-	}
+	
+	CarPartItemForModification = Cast<AAnomaItemCarPart>(ItemInHand);
+
+	const auto Result = VehicleAimedForModification->CanInstallCarPart(VehicleLocationAimedForModification, CarPartItemForModification);
+	if (Result != ECommonCarPartResult::Success)
+		return;
+	
+	GetWorld()->GetTimerManager().SetTimer(TimerHandleVehicleModification, this, &AAnomaPlayerCharacter::InstallCarPartCompleted,0.5f, false);
+	
 }
 ///---------------------------------------------------------------------------------------------------------------------
 void AAnomaPlayerCharacter::EndVehicleModification()
